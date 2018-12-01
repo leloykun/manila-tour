@@ -1,6 +1,7 @@
 {% extends "bootstrap/base.html" %}
 {% block title %} Manila Tour {% endblock %}
 {% block content %}
+  <p> <strong> Prototype </strong> </p>
   <form method='POST' action="{{url_for('index')}}">
     {{ node_names.csrf_token }}
     {% for i in range(node_names|length) %}
