@@ -1,0 +1,11 @@
+{% extends "bootstrap/base.html" %}
+{% block title %} Results {% endblock %}
+{% block content %}
+  <p> <strong> Prototype </strong> </p>
+  <p> The length of the shortest hamiltonian cycle is {{shortest_dist}} km </p>
+  <p> The hamiltonian cycle: </p>
+  {% for node in ham_cycle %}
+    <p> => {{node}} </p>
+  {% endfor %}
+  <button type="button" onclick="window.location.href='/'" class="btn btn-dark">Back</button>
+{% endblock %}

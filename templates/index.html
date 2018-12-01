@@ -1,0 +1,13 @@
+{% extends "bootstrap/base.html" %}
+{% block title %} Manila Tour {% endblock %}
+{% block content %}
+  <form method='POST' action="{{url_for('index')}}">
+    {{ node_names.csrf_token }}
+    {% for i in range(node_names|length) %}
+      <input type="checkbox" name="selected_nodes" value="{{i}}">
+      <label>{{node_names[i]}}</label>
+      <br>
+    {% endfor %}
+    <input type="submit" action="submit">
+  </form>
+{% endblock %}
