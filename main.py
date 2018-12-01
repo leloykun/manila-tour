@@ -18,13 +18,16 @@ def beautify(mask):
         s += str(1 if (mask & (1<<i)) != 0 else 0)
     return s
 
-def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes):
+def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes, start_node=-1):
     dp = np.full((1<<num_nodes, num_nodes), 1e9)
-    start_node = -1
-    for i in range(num_nodes):
-        if selected_mask & (1<<i):
-            start_node = i
-            break
+    print("start:", start_node)
+    print("mask:", beautify(selected_mask))
+    if start_node == -1:
+        for i in range(num_nodes):
+            if selected_mask & (1<<i):
+                start_node = i
+                break
+        start_node = 0
     print("start:", start_node)
     print("mask:", beautify(selected_mask))
     dp[0][start_node] = 0
@@ -48,6 +51,8 @@ def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes):
         order.append(best_mid)
         cur_mask ^= (1<<best_mid)
         last = best_mid
+    while order[0] != start_node:
+        order = order[1:] + [order[0]]
     return dp[selected_mask][start_node], order
 
 def calc_mask(selected_nodes):
@@ -71,10 +76,11 @@ def results():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
+        start_node = int(request.form['first_click'])
         selected_nodes = list(map(int, request.form.getlist("selected_nodes")))
         selected_mask = calc_mask(selected_nodes)
 
-        res = tsp_solver(selected_mask, num_selected=len(selected_nodes))
+        res = tsp_solver(selected_mask, num_selected=len(selected_nodes), start_node=start_node)
         return redirect(url_for('results',
                                 shortest_dist=res[0],
                                 ham_order="\t".join(map(str,res[1]))))

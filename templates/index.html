@@ -1,12 +1,31 @@
 {% extends "bootstrap/base.html" %}
 {% block title %} Manila Tour {% endblock %}
+
+{% block scripts %}
+  {{super()}}
+  <script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    var first_click = -1;
+    function checkbox_click(checkboxElem, value) {
+      if (checkboxElem.checked && first_click == -1)
+        first_click = value;
+      else if (first_click == value)
+        first_click = -1;
+      document.getElementById("first_click").value = first_click;
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
   <p> <strong> Prototype </strong> </p>
   <form method='POST' action="{{url_for('index')}}">
     {{ node_names.csrf_token }}
+    <input type="hidden" name="first_click" value="" id="first_click">
     {% for i in range(node_names|length) %}
-      <input type="checkbox" name="selected_nodes" value="{{i}}">
-      <label>{{node_names[i]}}</label>
+      <label>
+        <input type="checkbox" name="selected_nodes" value="{{i}}" onchange="checkbox_click(this, {{i}})">
+        {{node_names[i]}}
+      </label>
       <br>
     {% endfor %}
     <input type="submit" action="submit">
