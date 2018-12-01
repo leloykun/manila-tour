@@ -20,16 +20,14 @@ def beautify(mask):
 
 def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes, start_node=-1):
     dp = np.full((1<<num_nodes, num_nodes), 1e9)
-    print("start:", start_node)
-    print("mask:", beautify(selected_mask))
+
     if start_node == -1:
         for i in range(num_nodes):
             if selected_mask & (1<<i):
                 start_node = i
                 break
         start_node = 0
-    print("start:", start_node)
-    print("mask:", beautify(selected_mask))
+
     dp[0][start_node] = 0
     for mask in range(1<<num_nodes):
         for next in range(num_nodes):
@@ -37,6 +35,7 @@ def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes, start_nod
                 for cur in range(num_nodes):
                     if selected_mask & (1<<cur):
                         dp[mask | (1<<next)][next] = min(dp[mask | (1<<next)][next], dp[mask][cur] + dist[cur][next])
+
     # reconstruct the cycle:
     cur_mask = selected_mask
     order = []
@@ -51,8 +50,11 @@ def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes, start_nod
         order.append(best_mid)
         cur_mask ^= (1<<best_mid)
         last = best_mid
+
+    # make the starting node the first node in the order
     while order[0] != start_node:
         order = order[1:] + [order[0]]
+
     return dp[selected_mask][start_node], order
 
 def calc_mask(selected_nodes):
@@ -67,10 +69,6 @@ def results():
     ham_order = list(map(int, request.args['ham_order'].split('\t')))
     ham_cycle = [node_names[node] for node in ham_order] + [node_names[ham_order[0]]]
 
-    # print('length of the shortest hamiltonian cycle:', shortest_dist, 'km')
-    # print('hamiltonian cycle:')
-    # for node in ham_cycle:
-    #     print('=>', node)
     return render_template('results.html', shortest_dist=shortest_dist, ham_cycle=ham_cycle)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -88,9 +86,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    # check:
-    #cost = 0
-    #for i in range(1, len(res[1])):
-    #    cost += dist[res[1][i]][res[1][i-1]]
-    #cost += dist[res[1][-1]][res[1][0]]
-    #print(cost)
