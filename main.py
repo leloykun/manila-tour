@@ -22,11 +22,11 @@ def tsp_solver(selected_mask=(1<<num_nodes)-1, num_selected=num_nodes, start_nod
     dp = np.full((1<<num_nodes, num_nodes), 1e9)
 
     if start_node == -1:
+        start_node = 0
         for i in range(num_nodes):
             if selected_mask & (1<<i):
                 start_node = i
                 break
-        start_node = 0
 
     dp[0][start_node] = 0
     for mask in range(1<<num_nodes):
