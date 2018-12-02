@@ -1,11 +1,17 @@
 {% extends "bootstrap/base.html" %}
 {% block title %} Results {% endblock %}
 {% block content %}
-  <p> <strong> Prototype </strong> </p>
-  <p> The length of the shortest hamiltonian cycle is {{shortest_dist}} km </p>
-  <p> The hamiltonian cycle: </p>
-  {% for node in ham_cycle %}
-    <p> => {{node}} </p>
+  <img src="static/background_results.png" style="z-index:-5" width="100%">
+  <div style="width:100%; text-align:center">
+  <p style="font-size:4vh"> <span style="color:#000; font-weight:bold">Shortest hamiltonian route ({{shortest_dist}} km):</span></p>
+  {% for i in range(ham_cycle|length) %}
+    <p style="font-size:4vh"
+       onmouseover="this.style.color='#000'"
+       onmouseout="this.style.color='#333'"> {{ham_cycle[i]}} </p>
+    {% if i != ham_cycle|length-1 %}
+      <i class="glyphicon glyphicon-arrow-down"></i>
+    {% endif %}
   {% endfor %}
-  <button type="button" onclick="window.location.href='/'" class="btn btn-dark">Back</button>
+  <button type="button" onclick="window.location.href='/'" class="btn btn-info" style="font-size:4vh">Back</button>
+  </div>
 {% endblock %}

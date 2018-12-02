@@ -67,7 +67,9 @@ def calc_mask(selected_nodes):
 def results():
     shortest_dist = request.args['shortest_dist']
     ham_order = list(map(int, request.args['ham_order'].split('\t')))
-    ham_cycle = [node_names[node] for node in ham_order] + [node_names[ham_order[0]]]
+    ham_cycle = [node_names[node] for node in ham_order]
+    if len(ham_cycle) > 1:
+        ham_cycle += [node_names[ham_order[0]]]
 
     return render_template('results.html', shortest_dist=shortest_dist, ham_cycle=ham_cycle)
 
@@ -77,6 +79,9 @@ def index():
         start_node = int(request.form['first_click'])
         selected_nodes = list(map(int, request.form.getlist("selected_nodes")))
         selected_mask = calc_mask(selected_nodes)
+
+        if len(selected_nodes) == 0:
+            return render_template('index.html', node_names=node_names)
 
         res = tsp_solver(selected_mask, num_selected=len(selected_nodes), start_node=start_node)
         return redirect(url_for('results',

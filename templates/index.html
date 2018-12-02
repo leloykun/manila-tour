@@ -6,28 +6,56 @@
   <script type="text/javascript">
     var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     var first_click = -1;
+
     function checkbox_click(checkboxElem, value) {
-      if (checkboxElem.checked && first_click == -1)
-        first_click = value;
-      else if (first_click == value)
-        first_click = -1;
+      if (checkboxElem.checked) {
+        document.getElementById(value).style.color = "#80bee3";
+        if (first_click == -1)
+          first_click = value;
+      } else {
+        document.getElementById(value).style.color = "#333";
+        if (first_click == value)
+          first_click = -1;
+      }
       document.getElementById("first_click").value = first_click;
+    }
+
+    function checkbox_mousein(checkboxElem, value) {
+      if (document.getElementById("c"+value).checked == false)
+        checkboxElem.style.color='#000';
+    }
+
+    function checkbox_mouseout(checkboxElem, value) {
+      if (document.getElementById("c"+value).checked) {
+        checkboxElem.style.color = "#80bee3";
+      } else {
+        checkboxElem.style.color = "#333";
+      }
     }
   </script>
 {% endblock %}
 
 {% block content %}
-  <p> <strong> Prototype </strong> </p>
+  <img src="static/background.png" style="z-index:-5" width="100%">
   <form method='POST' action="{{url_for('index')}}">
     {{ node_names.csrf_token }}
-    <input type="hidden" name="first_click" value="" id="first_click">
-    {% for i in range(node_names|length) %}
-      <label>
-        <input type="checkbox" name="selected_nodes" value="{{i}}" onchange="checkbox_click(this, {{i}})">
-        {{node_names[i]}}
-      </label>
-      <br>
-    {% endfor %}
-    <input type="submit" action="submit">
+    <input type="hidden" name="first_click" value="-1" id="first_click">
+    <ul style="position:relative;">
+      {% for i in range(node_names|length) %}
+        <li style="display:block; float:left; width:32%; text-align:center; margin-left:0">
+        <label id={{i}} style="font-size:4vh"
+               onmouseover="checkbox_mousein(this, {{i}})"
+               onmouseout="checkbox_mouseout(this, {{i}})">
+          <input id=c{{i}} style="width:2vh;height:2vh"
+                 type="checkbox"
+                 name="selected_nodes"
+                 value="{{i}}"
+                 onchange="checkbox_click(this, {{i}})">
+          {{node_names[i]}}
+        </label>
+        </li>
+      {% endfor %}
+    </ul>
+    <input type="submit" action="submit" class="btn btn-info" value="Calculate Route" style="display:block; margin-left:auto; margin-right:auto; margin-bottom:2vh; font-size:4vh">
   </form>
 {% endblock %}
