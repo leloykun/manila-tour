@@ -71,7 +71,7 @@ def results():
     if len(ham_cycle) > 1:
         ham_cycle += [node_names[ham_order[0]]]
 
-    return render_template('results.html', shortest_dist=shortest_dist, ham_cycle=ham_cycle)
+    return render_template('results.html', shortest_dist=round(10*shortest_dist)/10, ham_cycle=ham_cycle)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
