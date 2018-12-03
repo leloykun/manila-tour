@@ -3,15 +3,15 @@
 {% block content %}
   <img src="static/background_results.png" style="z-index:-5" width="100%">
   <div style="width:100%; text-align:center">
-  <p style="font-size:4vh"> <span style="color:#000; font-weight:bold">Shortest hamiltonian route ({{shortest_dist}} km):</span></p>
+  <p style="font-size:4vw"> <span style="color:#000; font-weight:bold">Shortest hamiltonian route ({{shortest_dist}} km):</span></p>
   {% for i in range(ham_cycle|length) %}
-    <p style="font-size:4vh"
+    <p style="font-size:2.5vw"
        onmouseover="this.style.color='#000'"
        onmouseout="this.style.color='#333'"> {{ham_cycle[i]}} </p>
     {% if i != ham_cycle|length-1 %}
       <i class="glyphicon glyphicon-arrow-down"></i>
     {% endif %}
   {% endfor %}
-  <button type="button" onclick="window.location.href='/'" class="btn btn-info" style="font-size:4vh">Back</button>
+  <button type="button" onclick="window.location.href='/'" class="btn btn-info" style="font-size:2.5vw; margin-bottom:2vh">Back</button>
   </div>
 {% endblock %}
